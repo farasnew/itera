@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar WEBGIS</title>
+    <!-- LEAFLET CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <!-- LEAFLET JAVASCRIPT -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        // LOKASI KAJIAN
+        var map = L.map('map').setView([-5.367016, 105.317890], 15);
+
+        // BASEMAP OPENSTREETMAP
+        var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // BASEMAP ESRI
+        var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        });
+
+        // Add markers for buildings
+        const buildings = [
+            { coords: [-5.360920, 105.310511], name: "Gedung GKU 1" },
+            { coords: [-5.360267, 105.314202], name: "Gedung GKU 2" },
+            { coords: [-5.361346, 105.313842], name: "Gedung F" },
+            { coords: [-5.357948, 105.314397], name: "Gedung A" },
+            { coords: [-5.357924, 105.315331], name: "Gedung B" },
+            { coords: [-5.358407, 105.313694], name: "Gedung C dan D" },
+            { coords: [-5.360033, 105.315541], name: "Gedung E" },
+            { coords: [-5.360321, 105.310236], name: "Laboratorium 1" },
+            { coords: [-5.361516, 105.310534], name: "Laboratorium 2" },
+            { coords: [-5.360294, 105.309135], name: "Laboratorium 3" },
+            { coords: [-5.362487, 105.310674], name: "Laboratorium OZT" },
+            { coords: [-5.358414, 105.317456], name: "Asrama TB1" },
+            { coords: [-5.358449, 105.319444], name: "Asrama TB2" },
+            { coords: [-5.359123, 105.319108], name: "Asrama TB3" },
+            { coords: [-5.359131, 105.317503], name: "Asrama TB4" },
+            { coords: [-5.358468, 105.318470], name: "Asrama TB5" },
+            { coords: [-5.357822, 105.312614], name: "Embung A" },
+            { coords: [-5.359044, 105.308088], name: "Embung B" },
+            { coords: [-5.359404, 105.313704], name: "Embung C" },
+            { coords: [-5.360221, 105.320753], name: "Embung D" },
+            { coords: [-5.365216, 105.316825], name: "Embung E" },
+            { coords: [-5.370186, 105.310329], name: "Embung SUMATERA" },
+            { coords: [-5.369667, 105.312161], name: "LABIRIN" },
+            { coords: [-5.357598, 105.316519], name: "Kantin BKL" },
+            { coords: [-5.359432, 105.312622], name: "Kantin RK" },
+            { coords: [-5.358613, 105.321090], name: "Rumah Ibadah Multi Agama (RIMA)" },
+            { coords: [-5.356767, 105.318819], name: "Masjid Raya At-Tanwir" },
+            { coords: [-5.359054, 105.312624], name: "Masjid Baitul Ilmi" },
+            { coords: [-5.362422, 105.318954], name: "Gedung Serba Guna (GSG)" },
+            { coords: [-5.357728, 105.315966], name: "Poliklinik ITERA" },
+            { coords: [-5.357590, 105.315092], name: "ATM ITERA" },
+            { coords: [-5.357906, 105.315573], name: "Galeri 1 ITERA" },
+            { coords: [-5.360436, 105.311861], name: "PLTS ITERA" }
+        ];
+
+        // Add markers to the map
+        buildings.forEach(building => {
+            L.marker(building.coords)
+                .bindPopup(building.name)
+                .addTo(map);
+        });
+
+        // Example of adding circles (bundaran)
+        L.circle([-5.363156, 105.312634], {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: 20
+        }).addTo(map).bindPopup("Bundaran GKU");
+
+        L.circle([-5.360813, 105.314847], {
+            color: 'green',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: 35
+        }).addTo(map).bindPopup("Bundaran setelah GKU 2");
+
+        // Example of adding polygons (buildings)
+        const polygons = [
+            { coords: [[-5.361302, 105.314079], [-5.361457, 105.314101], [-5.361505, 105.313288], [-5.361307, 105.313282]], name: "Gedung F" },
+            { coords: [[-5.360815, 105.311007], [-5.361035, 105.311007], [-5.361051, 105.309973], [-5.360821, 105.309968]], name: "Gedung GKU 1" },
+            { coords: [[-5.360194, 105.311469], [-5.360869, 105.311469], [-5.360864, 105.312158], [-5.360724, 105.312153], [-5.360730, 105.312374], [-5.360553, 105.312368], [-5.360537, 105.312594], [-5.360392, 105.312594], [-5.360387, 105.312826], [-5.360156, 105.312831]], name: "PLTS ITERA" },
+            // Add more polygons as needed
+        ];
+
+        // Add polygons to the map
+        polygons.forEach(polygon => {
+            L.polygon(polygon.coords)
+                .bindPopup(polygon.name)
+                .addTo(map);
+        });
+
+        // Layer control for base maps and overlays
+        var baseMaps = {
+            "OSM": osm,
+            "ESRI": Esri_WorldImagery,
+        };
+
+        var overlayMaps = {};
+        buildings.forEach(building => {
+            overlayMaps[building.name] = L.marker(building.coords).bindPopup(building.name);
+        });
+
+        // Add layer control to the map
+        L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+            
